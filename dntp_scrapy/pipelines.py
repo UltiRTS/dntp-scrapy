@@ -11,19 +11,21 @@ import requests
 from unitSync import UnitSync
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
+from db import DataManager
 
 
 # Spring repo index: https://springfiles.springrts.com/json.php?nosensitive=on&images=on&category=*map*&tags=**&limit=99999999999
 class DntpScrapyPipeline:
-    cache = []
     uSync = UnitSync(os.getcwd(), os.path.join(config.engine_location, 'libunitsync.so'))
+    dbm = DataManager()
 
     def generate_minimap(self, item):
         return self.uSync.storeMinimap(item['map_name']) 
     
     def hash(self, item):
         with open(os.path.join(config.engine_location + '/maps', item['map_filename']), 'rb') as f:
-            return hash(f.read())
+            return hex(hash(f.read()))[2:]
+
     
     def get_mapname(self):
         return self.uSync.getMapName()
@@ -36,6 +38,9 @@ class DntpScrapyPipeline:
                 f.write(resp.content)
 
     def process_item(self, item, spider):
+        if(self.dbm.map_exists_by_filename(item['map_filename'])):
+            return item
+
         # download into engine/maps
         self.download(item)
         # reinit after downloading a new map
@@ -50,7 +55,8 @@ class DntpScrapyPipeline:
         shutil.move(minimap_path, os.path.join(config.archive_location + '/maps', item['minimap_filename']))
         shutil.move(os.path.join(config.engine_location + '/maps', item['map_filename']), 
             os.path.join(config.archive_location + '/maps', item['map_filename']))
-
+        
+        self.dbm.insert_map(item['map_name'], item['map_filename'],item['minimap_filename'], item['map_hash'])
 
         return item
 

@@ -11,7 +11,7 @@ class ZerokSpider(scrapy.Spider):
     base = 'http://zero-k.info'
     offset = 40
     offset_step = 40
-    stop_page = 41
+    stop_page = 39
     formData = {
         "mapSupportLevel": "2",
         "size": "any",
