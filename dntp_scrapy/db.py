@@ -15,15 +15,18 @@ class DataManager:
     
     def insert_map(self, map_name, map_filename, minimap_filename, map_hash):
         _map = Map(map_name=map_name, map_filename=map_filename, minimap_filename=minimap_filename, map_hash=map_hash)
-        self.session.add(_map)
-        self.session.commit()
-        self.session.close()
+        try:
+            self.session.add(_map)
+            self.session.commit()
+        except Exception as e:
+            print(e)
+            self.session.rollback()
+
         return self.session.query(Map).filter(Map.map_filename == map_filename).first()
     
     def insert_archive(self, archive_name, archive_filename, archive_hash):
         self.session.add(Archive(archive_name, archive_filename, archive_hash))
         self.session.commit()
-        self.session.close()
         return self.session.query(Archive).filter(Archive.archive_filename == archive_filename).first()
 
 class Map(Base):
