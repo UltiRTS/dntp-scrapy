@@ -58,8 +58,8 @@ class DntpScrapyPipeline:
         shutil.move(os.path.join(config.engine_location + '/maps', item['map_filename']), 
             mapfile_target_path)
         
-        os.chown(minimap_target_path, 0o777)
-        os.chown(mapfile_target_path, 0o777)
+        os.chmod(minimap_target_path, 0o777)
+        os.chmod(mapfile_target_path, 0o777)
         
         self.dbm.insert_map(item['map_name'], item['map_filename'],item['minimap_filename'], item['map_hash'])
 
