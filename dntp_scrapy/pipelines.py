@@ -52,9 +52,14 @@ class DntpScrapyPipeline:
         item['minimap_filename'] = os.path.basename(minimap_path)
 
         # move minimap, map files
-        shutil.move(minimap_path, os.path.join(config.archive_location + '/maps', item['minimap_filename']))
+        minimap_target_path = os.path.join(config.archive_location + '/maps', item['minimap_filename'])
+        mapfile_target_path = os.path.join(config.archive_location + '/maps', item['map_filename'])
+        shutil.move(minimap_path, minimap_target_path)
         shutil.move(os.path.join(config.engine_location + '/maps', item['map_filename']), 
-            os.path.join(config.archive_location + '/maps', item['map_filename']))
+            mapfile_target_path)
+        
+        os.chown(minimap_target_path, 0o777)
+        os.chown(mapfile_target_path, 0o777)
         
         self.dbm.insert_map(item['map_name'], item['map_filename'],item['minimap_filename'], item['map_hash'])
 
