@@ -1,5 +1,5 @@
 from warnings import catch_warnings
-from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String , ForeignKey
 from sqlalchemy.orm import declarative_base, sessionmaker
 import config
 import hashlib
@@ -83,6 +83,18 @@ class Archive(Base):
     def __repr__(self) -> str:
         return "<Archive(zip_name='%s', extract_to='%s', zip_hash='%s')>" \
             % (self.zip_name, self.extract_to, self.zip_hash)
+
+class SystemConfig(Base):
+    __tablename__ = 'system_config'
+
+    id = Column(Integer, primary_key=True)
+    config_name = Column(String(255))
+    engine = String(255, ForeignKey('archives.zip_name'))
+    mod = String(255, ForeignKey('archives.zip_name'))
+
+    def __repr__(self) -> str:
+        return "<SystemConfig(config_name='%s', engine='%s', mod='%s')>" \
+            % (self.config_name, self.engine, self.mod)
 
 if __name__ == '__main__':
     Base.metadata.create_all(engine)
