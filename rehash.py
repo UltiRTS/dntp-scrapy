@@ -14,6 +14,6 @@ for map_id in ids:
     if os.path.exists(map_filename):
         with open(map_filename, 'rb') as f:
             _hash = dbm.hash_map(map_filename)
-            _map['map_hash'] = _hash
+            _map.map_hash = _hash
     
     dbm.update_map(_map.id, _map.map_name, _map.map_filename, _map.minimap_filename, _map.map_hash)
