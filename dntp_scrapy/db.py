@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import declarative_base, sessionmaker
 import config
+import hashlib
 
 engine = create_engine(f'mysql+pymysql://{config.mysql_username}:{config.mysql_password}@localhost/{config.mysql_dbname}',
     echo=True)
@@ -24,10 +25,33 @@ class DataManager:
 
         return self.session.query(Map).filter(Map.map_filename == map_filename).first()
     
+    def get_maps_ids(self):
+        return self.session.query(Map.map_id).all()
+    
+    def get_map(self, map_id):
+        return self.session.query(Map).filter(Map.map_id == map_id).first()
+
+    def update_map(self, map_id, map_name, map_filename, minimap_filename, map_hash):
+        _map = self.session.query(Map).filter(Map.map_id == map_id).first()
+        _map.map_name = map_name
+        _map.map_filename = map_filename
+        _map.minimap_filename = minimap_filename
+        _map.map_hash = map_hash
+        self.session.commit()
+        return _map
+    
     def insert_archive(self, archive_name, archive_filename, archive_hash):
         self.session.add(Archive(archive_name, archive_filename, archive_hash))
         self.session.commit()
         return self.session.query(Archive).filter(Archive.archive_filename == archive_filename).first()
+    
+    @staticmethod
+    def hash_map(filename):
+        m = hashlib.md5()
+        with open(filename, 'rb') as f:
+            m.update(f.read())
+        
+        return m.digest().hex()
 
 class Map(Base):
     __tablename__ = 'maps'

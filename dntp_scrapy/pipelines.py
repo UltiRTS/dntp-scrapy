@@ -23,8 +23,8 @@ class DntpScrapyPipeline:
         return self.uSync.storeMinimap(item['map_name']) 
     
     def hash(self, item):
-        with open(os.path.join(config.engine_location + '/maps', item['map_filename']), 'rb') as f:
-            return hex(hash(f.read()))[2:]
+        filename = os.path.join(config.engine_location + '/maps', item['map_filename'])
+        return self.dbm.hash_map(filename)
 
     
     def get_mapname(self):
