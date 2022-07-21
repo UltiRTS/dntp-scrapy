@@ -1,3 +1,4 @@
+from warnings import catch_warnings
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import declarative_base, sessionmaker
 import config
@@ -32,12 +33,17 @@ class DataManager:
         return self.session.query(Map).filter(Map.id == map_id).first()
 
     def update_map(self, map_id, map_name, map_filename, minimap_filename, map_hash):
-        _map = self.session.query(Map).filter(Map.id == map_id).first()
-        _map.map_name = map_name
-        _map.map_filename = map_filename
-        _map.minimap_filename = minimap_filename
-        _map.map_hash = map_hash
-        self.session.commit()
+        try:
+            _map = self.session.query(Map).filter(Map.id == map_id).first()
+            _map.map_name = map_name
+            _map.map_filename = map_filename
+            _map.minimap_filename = minimap_filename
+            _map.map_hash = map_hash
+            self.session.commit()
+        except Exception as e:
+            print(e)
+            self.session.rollback()
+
         return _map
     
     def insert_archive(self, archive_name, archive_filename, archive_hash):
