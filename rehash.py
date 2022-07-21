@@ -16,4 +16,4 @@ for map_id in ids:
             _hash = dbm.hash_map(map_filename)
             _map['map_hash'] = _hash
     
-    dbm.update_map(_map)
+    dbm.update_map(_map.id, _map.map_name, _map.map_filename, _map.minimap_filename, _map.map_hash)
