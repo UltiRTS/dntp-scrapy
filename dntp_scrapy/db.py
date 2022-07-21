@@ -26,13 +26,13 @@ class DataManager:
         return self.session.query(Map).filter(Map.map_filename == map_filename).first()
     
     def get_maps_ids(self):
-        return self.session.query(Map.map_id).all()
+        return self.session.query(Map.id).all()
     
     def get_map(self, map_id):
-        return self.session.query(Map).filter(Map.map_id == map_id).first()
+        return self.session.query(Map).filter(Map.id == map_id).first()
 
     def update_map(self, map_id, map_name, map_filename, minimap_filename, map_hash):
-        _map = self.session.query(Map).filter(Map.map_id == map_id).first()
+        _map = self.session.query(Map).filter(Map.id == map_id).first()
         _map.map_name = map_name
         _map.map_filename = map_filename
         _map.minimap_filename = minimap_filename
