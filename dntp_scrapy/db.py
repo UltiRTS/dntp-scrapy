@@ -89,8 +89,8 @@ class SystemConfig(Base):
 
     id = Column(Integer, primary_key=True)
     config_name = Column(String(255))
-    engine = String(255, ForeignKey('archives.zip_name'))
-    mod = String(255, ForeignKey('archives.zip_name'))
+    engine = Column(Integer, ForeignKey('archives.id'))
+    mod = Column(Integer, ForeignKey('archives.id'))
 
     def __repr__(self) -> str:
         return "<SystemConfig(config_name='%s', engine='%s', mod='%s')>" \
