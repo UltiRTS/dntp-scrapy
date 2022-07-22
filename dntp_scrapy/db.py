@@ -91,7 +91,8 @@ class SystemConfig(Base):
     config_name = Column(String(255))
     engine = Column(Integer, ForeignKey('archives.id'))
     mod = Column(Integer, ForeignKey('archives.id'))
-    essentials_hash = Column(String(255))
+    engine_essentials_hash = Column(String(255))
+    mod_essentials_hash = Column(String(255))
 
     def __repr__(self) -> str:
         return "<SystemConfig(config_name='%s', engine='%s', mod='%s')>" \
