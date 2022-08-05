@@ -98,6 +98,18 @@ class SystemConfig(Base):
         return "<SystemConfig(config_name='%s', engine='%s', mod='%s')>" \
             % (self.config_name, self.engine, self.mod)
 
+class LobbyInfo(Base):
+    __tablename__ = 'lobby_info'
+
+    id = Column(Integer, primary_key=True)
+    version = Column(String(255))
+    lobby_hash = Column(String(255))
+    lobby_name = Column(String(255))
+
+    def __repr__(self) -> str:
+        return "<LobbyInfo(version='%s', lobby_hash='%s', lobby_name='%s')>" \
+            % (self.version, self.lobby_hash, self.lobby_name)
+
 if __name__ == '__main__':
     Base.metadata.create_all(engine)
     pass
