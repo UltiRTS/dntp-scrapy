@@ -60,7 +60,7 @@ class UnitSync:
 
 	def storeMinimap(self, mapname):
 		minimapStorePath = os.path.join('/tmp', mapname + '.png')
-		#img = self._getImg(mapname, 0)
+		img = self._getImg(mapname, 0)
 		for reduction in range(0,9):
 			try:
 				img = self._getImg(mapname, reduction)
@@ -68,9 +68,8 @@ class UnitSync:
 			except:
 				#print(colored("ERROR", 'red'), "No much data reduce width and height.")
 				pass
+
 		img.save(minimapStorePath)
-
-
 		return minimapStorePath
 		
 		
