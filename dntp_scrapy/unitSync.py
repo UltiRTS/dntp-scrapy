@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 from PIL import Image
 import ctypes
 import os
@@ -45,7 +46,16 @@ class UnitSync:
 	def _getImg(self, mapname, reduction=0):
 		width = height = 1024 // 2**reduction
 		self._getMinimap.restype = ctypes.POINTER(ctypes.c_ubyte * (width * height * 2))
-		minimapData = self._getMinimap(mapname.encode('utf8'), reduction).contents
+		try:
+			minimapData = self._getMinimap(mapname.encode('utf8'), reduction).contents
+			mapname.replace(' ', '_')
+			img = Image.frombytes('RGB', (width, height), minimapData, 'raw', 'BGR;16' )
+
+			return img
+		except ValueError:
+			img = Image.new('RGB', (width, height), (0, 0, 0))
+			return img
+		
 #		have, need = len(minimapData), width*height*2
 #		print(have, need)
 #		if have < need:
@@ -53,10 +63,6 @@ class UnitSync:
 #			emptyFix = bytes(need-have)
 #			minimapData += emptyFix
 
-		mapname.replace(' ', '_')
-		img = Image.frombytes('RGB', (width, height), minimapData, 'raw', 'BGR;16' )
-
-		return img
 
 	def storeMinimap(self, mapname):
 		minimapStorePath = os.path.join('/tmp', mapname + '.png')
