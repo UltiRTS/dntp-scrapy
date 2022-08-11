@@ -88,7 +88,17 @@ class UnitSync:
 
 if __name__ == '__main__':
 	cur = os.getcwd()
-	
 	print(cur + '/engine/libunitsync.so')
 	us = UnitSync(cur,cur + '/engine/libunitsync.so')
-	print(us.mapList())
+
+	import os
+	import requests
+
+	testMapUrl = 'https://springfiles.springrts.com/files/maps/supercoreprimecorridor-v1.5.sd7'
+	resp = requests.get(testMapUrl)
+	with open(os.path.join(cur, 'engine/maps', 'supercoreprimecorridor-v1.5.sd7'), 'wb') as f:
+		f.write(resp.content)
+	
+	us.reinit()
+	mapname = us.getMapName()
+	us.storeMinimap(mapname)
