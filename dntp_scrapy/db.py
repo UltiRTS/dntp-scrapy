@@ -112,6 +112,19 @@ class LobbyInfo(Base):
         return "<LobbyInfo(version='%s', lobby_hash='%s', lobby_name='%s', type='%s')>" \
             % (self.version, self.lobby_hash, self.lobby_name, self._type)
 
+class Mod(Base):
+    __tablename__ = 'mods'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(255))
+    archive = Column(Integer, ForeignKey('archives.id'))
+    version = Column(String(255))
+
+    def __repr__(self) -> str:
+        return "<Mod(name='%s', archive='%d', version='%s')>" \
+            % (self.name, self.archive, self.version)
+
+
 if __name__ == '__main__':
     Base.metadata.create_all(engine)
     pass
