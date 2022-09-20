@@ -118,6 +118,7 @@ class Mod(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(255))
     archive = Column(Integer, ForeignKey('archives.id'))
+    folder_hash = Column(String(255))
     version = Column(String(255))
 
     def __repr__(self) -> str:
